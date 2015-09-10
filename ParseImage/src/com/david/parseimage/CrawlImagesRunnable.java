@@ -38,11 +38,14 @@ public class CrawlImagesRunnable implements Runnable {
         String pageContent = retreiveHtmlContent(mUrl);
         Log.d("david", "david pageContent=" + pageContent);
 
-        if ( !TextUtils.isEmpty(pageContent.toString()) ) {
+        if ( !TextUtils.isEmpty(pageContent) ) {
             // START
             // JSoup Library used to filter urls from html body
-            Document doc = Jsoup.parse(pageContent.toString());
-            //Document doc = Jsoup.connect(url).get();
+
+            Document doc = Jsoup.parse(pageContent);// Jsoup.parse(pageContent.toString());
+            // Document doc = Jsoup.connect(url).get();
+            //Element content = doc.getElementById("content");
+            //Elements images = doc.getElementsByTag("img");
 
             // Elements media = doc.select("[src]");
             Elements images = doc.select("img[src~=(?i)\\.(png|jpe?g)]");
@@ -58,14 +61,14 @@ public class CrawlImagesRunnable implements Runnable {
             for ( Element src : images ) {
                 // if ( src.tagName()
                 // .equals("img") ) {
-                if ( !TextUtils.isEmpty(src.attr("abs:src")) ) {
+                if ( !TextUtils.isEmpty(src.attr("abs:src")) && TextUtils.isEmpty(src.attr("onerror"))) {
                     imageslist.add(src.attr("abs:src"));
                 }
                 Log.d("david", "david2222 src.tagName()=" + src.tagName()
                     + ",src.attr(abs:src)=" + src.attr("abs:src")
                     + ",src.attr(width)=" + src.attr("width")
                     + ",src.attr(height)=" + src.attr("height")
-                    + ",src.attr(alt)=" + src.attr("alt"));
+                    + ",src.attr(alt)=" + src.attr("alt")+",src.attr(onerror)="+src.attr("onerror"));
 
                 // }
             }
